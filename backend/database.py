@@ -13,3 +13,7 @@ client = MongoClient(MONGO_URI)
 db = client["login_app"]
 
 users_collection = db["users"]
+sessions_collection = db["sessions"]
+messages_collection = db["messages"]
+documents_collection = db["documents"]
+query_logs_collection = db["query_logs"]

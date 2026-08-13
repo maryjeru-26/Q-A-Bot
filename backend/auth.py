@@ -2,6 +2,8 @@ import os
 
 import bcrypt
 import jwt
+from fastapi import HTTPException, Depends
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
 from datetime import datetime, timedelta
 from dotenv import load_dotenv
@@ -12,6 +14,7 @@ load_dotenv()
 JWT_SECRET = os.getenv("JWT_SECRET")
 
 ALGORITHM = "HS256"
+security = HTTPBearer()
 
 
 def hash_password(password: str):
@@ -45,3 +48,15 @@ def create_token(user_id: str, username: str):
     )
 
     return token
+
+
+def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(security)):
+    """Validate the existing login token for protected application routes."""
+    try:
+        payload = jwt.decode(credentials.credentials, JWT_SECRET, algorithms=[ALGORITHM])
+        user_id = payload.get("user_id")
+        if not user_id:
+            raise ValueError("Token has no user id")
+        return {"user_id": user_id, "username": payload.get("username", "")}
+    except (jwt.PyJWTError, ValueError):
+        raise HTTPException(status_code=401, detail="Invalid or expired authentication token")

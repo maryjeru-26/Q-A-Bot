@@ -4,3 +4,8 @@ pymongo
 python-dotenv
 bcrypt
 pyjwt
+chromadb
+sentence-transformers
+pypdf
+groq
+python-multipart
