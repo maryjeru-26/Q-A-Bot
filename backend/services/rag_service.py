@@ -1,5 +1,6 @@
 import hashlib
 import os
+import re
 from pathlib import Path
 from bson import ObjectId
 from database import documents_collection
@@ -9,6 +10,27 @@ from .chroma_service import index_chunks, search
 
 
 NOT_FOUND_MESSAGE = "I couldn't find sufficient information about this in the uploaded document."
+
+
+def highlight_excerpt(text, question):
+    """Return a small, query-specific label excerpt—not an entire page chunk."""
+    intents = [
+        (("dosage", "dose", "administration", "how often"), r"dosage and administration.{0,500}?(?:\.|$)"),
+        (("contraindication", "should not", "not use"), r"contraindications?.{0,420}?(?:\.|$)"),
+        (("warning", "precaution", "caution"), r"warnings? and precautions?.{0,500}?(?:\.|$)"),
+        (("interaction", "taking", "with another"), r"drug interactions?.{0,500}?(?:\.|$)"),
+        (("storage", "store", "temperature"), r"(?:storage|how supplied).{0,420}?(?:\.|$)"),
+        (("missed", "forget"), r"(?:missed dose|if a dose.{0,120}missed).{0,420}?(?:\.|$)"),
+    ]
+    lowered = question.lower()
+    for terms, pattern in intents:
+        if any(term in lowered for term in terms):
+            match = re.search(pattern, text, flags=re.IGNORECASE | re.DOTALL)
+            if match:
+                return re.sub(r"\s+", " ", match.group(0)).strip()
+    # A concise fallback avoids turning a broad retrieved page into a highlight.
+    sentence = re.split(r"(?<=[.!?])\s+", text.strip())[0]
+    return sentence[:450]
 
 
 def build_retrieval_query(question, history):
@@ -44,8 +66,9 @@ def file_hash(path):
     return digest.hexdigest()
 
 
-def index_pdf(path, user_id, is_default=False):
+def index_pdf(path, user_id, is_default=False, display_name=None):
     path = Path(path)
+    display_name = display_name or path.name
     digest = file_hash(path)
     existing = documents_collection.find_one({"user_id": user_id, "file_hash": digest, "status": "indexed"})
     if existing:
@@ -58,10 +81,11 @@ def index_pdf(path, user_id, is_default=False):
         raise ValueError("No readable text was found in this PDF")
     document_id = str(ObjectId())
     embeddings = embed_texts([chunk["text"] for chunk in chunks])
-    index_chunks(document_id, path.name, user_id, chunks, embeddings)
-    document = {"_id": ObjectId(document_id), "user_id": user_id, "file_name": path.name,
+    index_chunks(document_id, display_name, user_id, chunks, embeddings)
+    document = {"_id": ObjectId(document_id), "user_id": user_id, "file_name": display_name,
                 "file_type": "pdf", "page_count": page_count, "chunk_count": len(chunks),
                 "status": "indexed", "file_hash": digest, "is_default": is_default,
+                "stored_path": str(path.resolve()),
                 "created_at": __import__("datetime").datetime.utcnow()}
     documents_collection.insert_one(document)
     document["_id"] = document_id

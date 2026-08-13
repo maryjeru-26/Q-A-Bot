@@ -40,3 +40,13 @@ def search(user_id, query_embedding, document_id=None, top_k=5):
 
 def delete_document(user_id, document_id):
     collection().delete(where={"$and": [{"user_id": user_id}, {"document_id": document_id}]})
+
+
+def evidence_for_page(user_id, document_id, page):
+    """Retrieve stored chunk text for legacy citations that lack an excerpt."""
+    result = collection().get(
+        where={"$and": [{"user_id": user_id}, {"document_id": document_id}, {"page_start": int(page)}]},
+        include=["documents", "metadatas"],
+    )
+    documents = result.get("documents", [])
+    return documents[0] if documents else None

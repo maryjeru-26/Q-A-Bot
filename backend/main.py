@@ -4,6 +4,7 @@ import shutil
 import uuid
 from bson import ObjectId
 from fastapi import FastAPI, HTTPException, Depends, UploadFile, File
+from fastapi.responses import FileResponse
 from pydantic import BaseModel, Field
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -13,9 +14,9 @@ from models import UserRegister, UserLogin
 from auth import hash_password, verify_password, create_token, get_current_user
 from services.rag_service import (ensure_default_document, index_pdf, retrieve,
                                   has_sufficient_context, is_patient_specific,
-                                  NOT_FOUND_MESSAGE)
+                                  NOT_FOUND_MESSAGE, highlight_excerpt)
 from services.llm_service import generate_answer
-from services.chroma_service import delete_document as delete_chroma_document
+from services.chroma_service import delete_document as delete_chroma_document, evidence_for_page
 
 
 app = FastAPI()
@@ -130,6 +131,7 @@ def login(user: UserLogin):
 
 def serialize_document(document):
     document["document_id"] = str(document.pop("_id"))
+    document.pop("stored_path", None)
     return document
 
 
@@ -156,9 +158,7 @@ def upload_pdf(file: UploadFile = File(...), current_user=Depends(get_current_us
     with target.open("wb") as output:
         shutil.copyfileobj(file.file, output)
     try:
-        document, created = index_pdf(target, current_user["user_id"])
-        document["file_name"] = safe_name  # preserve the user-facing original name
-        documents_collection.update_one({"_id": ObjectId(document["document_id"])}, {"$set": {"file_name": safe_name}})
+        document, created = index_pdf(target, current_user["user_id"], display_name=safe_name)
         return {"status": "ready", "indexed": created, "document": document}
     except Exception:
         target.unlink(missing_ok=True)
@@ -186,6 +186,42 @@ def get_document(document_id: str, current_user=Depends(get_current_user)):
     if not document:
         raise HTTPException(404, "Document not found")
     return serialize_document(document)
+
+
+@app.get("/api/documents/{document_id}/file")
+def get_document_file(document_id: str, current_user=Depends(get_current_user)):
+    """Serve a PDF only after ownership verification; it is never public/static."""
+    if not ObjectId.is_valid(document_id):
+        raise HTTPException(404, "Document not found")
+    document = documents_collection.find_one({"_id": ObjectId(document_id), "user_id": current_user["user_id"]})
+    if not document:
+        raise HTTPException(404, "Document not found")
+    path_value = document.get("stored_path")
+    path = Path(path_value) if path_value else None
+    # Supports documents that were indexed before stored_path was introduced.
+    if not path or not path.is_file():
+        if document.get("is_default"):
+            candidate = Path(__file__).resolve().parent / "Data" / document["file_name"]
+        else:
+            candidates = list((Path(__file__).resolve().parent / "uploads" / current_user["user_id"]).glob(f"*_{document['file_name']}"))
+            candidate = candidates[0] if candidates else None
+        path = candidate
+    if not path or not path.is_file():
+        raise HTTPException(404, "The original PDF file is no longer available")
+    return FileResponse(path, media_type="application/pdf", filename=document["file_name"], headers={"Cache-Control": "private, no-store"})
+
+
+@app.get("/api/documents/{document_id}/pages/{page}/evidence")
+def get_page_evidence(document_id: str, page: int, question: str = "", current_user=Depends(get_current_user)):
+    if not ObjectId.is_valid(document_id) or page < 1:
+        raise HTTPException(404, "Document page not found")
+    document = documents_collection.find_one({"_id": ObjectId(document_id), "user_id": current_user["user_id"]})
+    if not document:
+        raise HTTPException(404, "Document not found")
+    evidence = evidence_for_page(current_user["user_id"], document_id, page)
+    if not evidence:
+        raise HTTPException(404, "No indexed evidence is available for this page")
+    return {"evidence": evidence, "highlight": highlight_excerpt(evidence, question)}
 
 
 @app.post("/api/sessions")
@@ -293,7 +329,8 @@ def chat(request: ChatRequest, current_user=Depends(get_current_user)):
         meta = chunks[0]["metadata"]
         citations = [{"document": meta["document_name"], "document_id": meta["document_id"],
                       "page": meta["page_start"], "page_end": meta["page_end"],
-                      "section": meta.get("section") or None}]
+                      "section": meta.get("section") or None, "evidence": chunks[0]["text"],
+                      "highlight": highlight_excerpt(chunks[0]["text"], request.message)}]
     now = datetime.utcnow()
     user_message_id, assistant_message_id = str(uuid.uuid4()), str(uuid.uuid4())
     messages_collection.insert_many([
