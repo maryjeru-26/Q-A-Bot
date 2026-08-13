@@ -100,9 +100,15 @@ function Login() {
 
         <div className="auth-container">
 
-            <div className="auth-box">
+            <section className="auth-intro">
+                <div className="auth-brand"><span>✦</span> Paperwise</div>
+                <div className="auth-copy"><p className="eyebrow">Drug-label intelligence, made clear</p><h1>Ask better questions about your prescribing documents.</h1><p>Upload a drug label, ask in plain language, and get grounded answers with the exact source page—without replacing professional medical advice.</p></div>
+                <div className="feature-list"><div><b>◈ PDF-grounded answers</b><span>Answers stay tied to your uploaded documents.</span></div><div><b>◈ Exact page sources</b><span>Open the cited page and inspect the highlighted evidence.</span></div><div><b>◈ Private conversations</b><span>Your documents, chats, and analytics stay isolated to your account.</span></div></div>
+                <p className="auth-note">For drug-information reference only. Always consult a qualified healthcare professional for personal medical decisions.</p>
+            </section>
+            <div className="auth-panel"><div className="auth-box">
 
-                <h2>Login</h2>
+                <p className="eyebrow">Welcome back</p><h2>Sign in to Paperwise</h2><p className="auth-subtitle">Continue your document conversations.</p>
 
 
                 <form onSubmit={handleSubmit}>
@@ -149,7 +155,7 @@ function Login() {
 
                 </p>
 
-            </div>
+            </div></div>
 
         </div>
 

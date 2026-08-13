@@ -92,9 +92,15 @@ function Register() {
 
         <div className="auth-container">
 
-            <div className="auth-box">
+            <section className="auth-intro">
+                <div className="auth-brand"><span>✦</span> Paperwise</div>
+                <div className="auth-copy"><p className="eyebrow">Grounded drug information</p><h1>Bring clarity to complex prescribing documents.</h1><p>Paperwise searches only the PDFs you choose, maintains your conversation context, and links each answer back to the source page.</p></div>
+                <div className="feature-list"><div><b>01 · Upload drug PDFs</b><span>Index your own prescribing information securely.</span></div><div><b>02 · Ask focused questions</b><span>Explore dosage, warnings, interactions, and more.</span></div><div><b>03 · Verify every answer</b><span>Review the cited source page before making decisions.</span></div></div>
+                <p className="auth-note">Paperwise is an information tool, not a diagnostic or treatment service.</p>
+            </section>
+            <div className="auth-panel"><div className="auth-box">
 
-                <h2>Create Account</h2>
+                <p className="eyebrow">Create your workspace</p><h2>Get started</h2><p className="auth-subtitle">Save private, source-backed document chats.</p>
 
 
                 <form onSubmit={handleSubmit}>
@@ -151,7 +157,7 @@ function Register() {
 
                 </p>
 
-            </div>
+            </div></div>
 
         </div>
 
