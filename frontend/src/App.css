@@ -6,3 +6,4 @@
 .document-card button + button { margin-left: 8px; background: #fff1f2; color: #c81e1e; }
 .document-card button + button:hover { background: #ffe4e6; }
 .message-actions .delete-question { color: #c81e1e; }
+.guide-steps{max-width:760px;margin:30px 0;display:grid;gap:13px}.guide-steps article{display:flex;align-items:flex-start;gap:15px;background:#fff;border:1px solid #e6e6e8;border-radius:10px;padding:17px}.guide-steps article>b{width:29px;height:29px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:#ededff;color:#4849b8;flex-shrink:0}.guide-steps h2{font-size:16px;margin:1px 0 5px}.guide-steps p{margin:0;color:#666;line-height:1.5;font-size:14px}

@@ -16,7 +16,8 @@ def index_chunks(document_id, document_name, user_id, chunks, embeddings):
     ids = [f"{user_id}:{document_id}:{index}" for index in range(len(chunks))]
     metadata = [{"document_id": document_id, "document_name": document_name,
                  "user_id": user_id, "page_start": item["page_start"],
-                 "page_end": item["page_end"], "section": item.get("section") or ""}
+                 "page_end": item["page_end"], "page_number": item["page_start"],
+                 "section": item.get("section") or "", "source": "uploaded_pdf"}
                 for item in chunks]
     collection().upsert(ids=ids, documents=[item["text"] for item in chunks],
                         embeddings=embeddings, metadatas=metadata)

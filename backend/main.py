@@ -11,7 +11,9 @@ from database import (users_collection, sessions_collection, messages_collection
                       documents_collection, query_logs_collection)
 from models import UserRegister, UserLogin
 from auth import hash_password, verify_password, create_token, get_current_user
-from services.rag_service import ensure_default_document, index_pdf, retrieve
+from services.rag_service import (ensure_default_document, index_pdf, retrieve,
+                                  has_sufficient_context, is_patient_specific,
+                                  NOT_FOUND_MESSAGE)
 from services.llm_service import generate_answer
 from services.chroma_service import delete_document as delete_chroma_document
 
@@ -158,9 +160,9 @@ def upload_pdf(file: UploadFile = File(...), current_user=Depends(get_current_us
         document["file_name"] = safe_name  # preserve the user-facing original name
         documents_collection.update_one({"_id": ObjectId(document["document_id"])}, {"$set": {"file_name": safe_name}})
         return {"status": "ready", "indexed": created, "document": document}
-    except Exception as error:
+    except Exception:
         target.unlink(missing_ok=True)
-        raise HTTPException(400, f"Unable to index PDF: {str(error)}")
+        raise HTTPException(400, "Unable to index this PDF. Ensure it is a readable, text-based PDF and try again.")
 
 
 @app.delete("/api/documents/{document_id}")
@@ -271,11 +273,18 @@ def chat(request: ChatRequest, current_user=Depends(get_current_user)):
         document_id = default_document["document_id"]
     history = list(messages_collection.find({"session_id": request.session_id, "user_id": user_id}, {"_id": 0, "role": 1, "content": 1}).sort("created_at", -1).limit(12))
     history.reverse()
-    chunks = retrieve(user_id, request.message, document_id)
-    try:
-        answer = generate_answer(history, request.message, chunks)
-    except Exception as error:
-        raise HTTPException(503, f"Answer generation is unavailable: {str(error)}")
+    chunks = retrieve(user_id, request.message, document_id, history)
+    patient_specific = is_patient_specific(request.message)
+    if not has_sufficient_context(chunks):
+        answer = NOT_FOUND_MESSAGE
+        if patient_specific:
+            answer += " Please consult a qualified healthcare professional for advice specific to your situation."
+        chunks = []
+    else:
+        try:
+            answer = generate_answer(history, request.message, chunks, patient_specific)
+        except Exception:
+            raise HTTPException(503, "Answer generation is temporarily unavailable. Please try again.")
     # Present one clear, authoritative source card: the highest-ranked retrieved
     # chunk. The answer may use additional context internally, but the displayed
     # page is always metadata from this real retrieval result.
@@ -296,7 +305,9 @@ def chat(request: ChatRequest, current_user=Depends(get_current_user)):
     else:
         title = session["title"]
     sessions_collection.update_one({"_id": session["_id"]}, {"$set": {"title": title, "current_document_id": document_id, "updated_at": now}})
-    retrieved = [{"chunk_id": item["chunk_id"], "page": item["metadata"]["page_start"], "page_end": item["metadata"]["page_end"], "score": item["score"]} for item in chunks]
+    retrieved = [{"chunk_id": item["chunk_id"], "document": item["metadata"]["document_name"],
+                  "page": item["metadata"]["page_start"], "page_end": item["metadata"]["page_end"],
+                  "score": item["score"]} for item in chunks]
     query_logs_collection.insert_one({"user_id": user_id, "session_id": request.session_id, "query": request.message,
                                       "document_id": document_id, "retrieved_chunks": retrieved, "citations": citations,
                                       "answer": answer, "created_at": now})

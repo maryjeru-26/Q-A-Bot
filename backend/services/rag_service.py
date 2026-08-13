@@ -8,6 +8,34 @@ from .embedding_service import embed_texts
 from .chroma_service import index_chunks, search
 
 
+NOT_FOUND_MESSAGE = "I couldn't find sufficient information about this in the uploaded document."
+
+
+def build_retrieval_query(question, history):
+    """Use same-session history only to resolve short follow-up questions."""
+    lowered = question.lower()
+    follow_up_markers = ("it", "its", "this drug", "this medication", "what about", "and ", "those")
+    if len(question.split()) < 12 or any(marker in lowered for marker in follow_up_markers):
+        previous_questions = [item["content"] for item in history if item.get("role") == "user"]
+        if previous_questions:
+            return f"Previous question: {previous_questions[-1]}\nCurrent question: {question}"
+    return question
+
+
+def has_sufficient_context(chunks):
+    """Never send weak/no retrieval to the model as document evidence."""
+    if not chunks:
+        return False
+    return chunks[0]["score"] >= float(os.getenv("MIN_RETRIEVAL_SCORE", "0.28"))
+
+
+def is_patient_specific(question):
+    terms = ("can i", "should i", "my ", "i am taking", "i'm taking", "pregnan",
+             "breastfeed", "renal", "kidney", "liver", "interaction", "with another",
+             "missed dose", "start", "stop", "change my dose", "condition")
+    return any(term in question.lower() for term in terms)
+
+
 def file_hash(path):
     digest = hashlib.sha256()
     with open(path, "rb") as source:
@@ -47,5 +75,6 @@ def ensure_default_document(user_id):
     return index_pdf(pdfs[0], user_id, is_default=True)[0] if pdfs else None
 
 
-def retrieve(user_id, question, document_id=None):
-    return search(user_id, embed_texts([question])[0], document_id, int(os.getenv("TOP_K", "5")))
+def retrieve(user_id, question, document_id=None, history=None):
+    query = build_retrieval_query(question, history or [])
+    return search(user_id, embed_texts([query])[0], document_id, int(os.getenv("TOP_K", "5")))
