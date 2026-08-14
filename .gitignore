@@ -5,3 +5,9 @@ backend/uploads/
 backend/__pycache__/
 frontend/node_modules/
 frontend/dist/
+*.pyc 
+*.pyo
+*.pyd
+*.venv/
+venv
+*.env
