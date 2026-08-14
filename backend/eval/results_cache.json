@@ -4,11 +4,11 @@
   "metrics": {
     "retrieval_recall_at_5": 0.8889,
     "retrieval_precision_at_1": 0.87,
-    "faithfulness_pass_rate": 1.0,
+    "faithfulness_pass_rate": 0.9444,
     "total_questions": 18,
     "recall_hits": 16,
-    "precision_hits": 10,
-    "faithfulness_hits": 18
+    "precision_hits": 15,
+    "faithfulness_hits": 17
   },
   "details": [
     {
