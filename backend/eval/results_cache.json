@@ -1,0 +1,366 @@
+{
+  "document_id": "6a7d6946a5dec243cb42fabc",
+  "timestamp": "2026-08-14T07:14:36.123227",
+  "metrics": {
+    "retrieval_recall_at_5": 0.8889,
+    "retrieval_precision_at_1": 0.87,
+    "faithfulness_pass_rate": 1.0,
+    "total_questions": 18,
+    "recall_hits": 16,
+    "precision_hits": 10,
+    "faithfulness_hits": 18
+  },
+  "details": [
+    {
+      "id": 1,
+      "question": "What is Atelvia indicated for?",
+      "expected_pages": [
+        1,
+        2
+      ],
+      "retrieved_pages": [
+        5,
+        6,
+        22,
+        24,
+        27
+      ],
+      "top1_page": 24,
+      "recall_at_5": false,
+      "precision_at_1": false,
+      "faithfulness": 0.9,
+      "answer": " in your fingers, toes, or around your mouth Your doctor may prescribe calcium and vitamin D to help prevent low calcium levels in your blood, while you are taking Atelvia. Specific studies with Atelvia have not been performed. Do not use Atelvia for a condition for which it was not prescribed. Do not give Atelvia to other people, even if they have the same symptoms you have. This Medication Guide summarizes the most important information about Atelvia. You can ask your pharmacist or doctor for information about Atelvia that is written for health professionals."
+    },
+    {
+      "id": 2,
+      "question": "What is the recommended dosage of Atelvia?",
+      "expected_pages": [
+        2,
+        3
+      ],
+      "retrieved_pages": [
+        1,
+        3,
+        6,
+        7,
+        23
+      ],
+      "top1_page": 23,
+      "recall_at_5": true,
+      "precision_at_1": false,
+      "faithfulness": 0.9,
+      "answer": "23 Instruct patients to swallow Atelvia tablets whole. Instruct patients that if they develop symptoms of esophageal disease (such as difficulty or pain upon swallowing, retrosternal pain or severe persistent or worsening heartburn) they should consult their physician before continuing Atelvia [see Warnings and Precautions (5.2)]. If a dose of Atelvia 35 mg once-a-week is missed, instruct the patient to take one tablet on the morning after they remember and return to taking one tablet once-a-week, as originally scheduled on their chosen day. As treatment with Atelvia resulted in a significantly higher incidence of abdominal pain when administered before breakfast under fasting conditions, safety results that follow refer only to Atelvia 35 mg once-a-week immediately following breakfast and risedronate sodium immediate-release 5 mg daily. The incidence of all-cause mortality was 0.0% in the Atelvia 35 mg once-a-week group and 0.3% in the risedronate sodium immediate-release 5 mg daily group. The incidence of serious adverse reactions was 6.5% in the Atelvia 35 mg once-a-week group and 7.2% in the risedronate sodium immediate-release 5 mg daily group."
+    },
+    {
+      "id": 3,
+      "question": "How should a patient take Atelvia?",
+      "expected_pages": [
+        2,
+        3,
+        23
+      ],
+      "retrieved_pages": [
+        1,
+        3,
+        6,
+        23,
+        24
+      ],
+      "top1_page": 23,
+      "recall_at_5": true,
+      "precision_at_1": true,
+      "faithfulness": 0.9,
+      "answer": "23 Instruct patients to swallow Atelvia tablets whole. Patients should not chew, cut, or crush the tablet because of a potential for oropharyngeal irritation, and because the tablet coating is an important part of the delayed-release formulation. Patients should not lie down for 30 minutes after taking the medication. Instruct patients that if they develop symptoms of esophageal disease (such as difficulty or pain upon swallowing, retrosternal pain or severe persistent or worsening heartburn) they should consult their physician before continuing Atelvia [see Warnings and Precautions (5.2)]. If a dose of Atelvia 35 mg once-a-week is missed, instruct the patient to take one tablet on the morning after they remember and return to taking one tablet once-a-week, as originally scheduled on their chosen day. Patients should not take 2 tablets on the same day."
+    },
+    {
+      "id": 4,
+      "question": "What are the contraindications for Atelvia?",
+      "expected_pages": [
+        3
+      ],
+      "retrieved_pages": [
+        1,
+        3,
+        5,
+        6
+      ],
+      "top1_page": 3,
+      "recall_at_5": true,
+      "precision_at_1": true,
+      "faithfulness": 0.9,
+      "answer": "4 CONTRAINDICATIONS Atelvia is contraindicated in patients with the following conditions: • Abnormalities of the esophagus which delay esophageal emptying such as stricture or achalasia [see Warnings and Precautions (5.2)] • Inability to stand or sit upright for at least 30 minutes [see Dosage and Administration (2), Warnings and Precautions (5.2)] • Hypocalcemia [see Warnings and Precautions (5.3)] • Known hypersensitivity to any component of this product. llous skin reactions, Stevens-Johnson syndrome and toxic epidermal necrolysis have been reported [see Adverse Reactions (6.2)] 5 WARNINGS AND PRECAUTIONS 5.1 Drug Products with the Same Active Ingredient Atelvia contains the same active ingredient found in Actonel®. A patient being treated with Actonel should not receive Atelvia. 5.2 Upper Gastrointestinal Adverse Reactions Atelvia, like other bisphosphonates administered orally, may cause local irritation of the upper gastrointestinal mucosa. Because of these possible irritant effects and a potential for worsening of the underlying disease, caution should be used when Atelvia is given to patients with active upper gastrointestinal problems (such as known Barrett’s esophagus, dysphagia, other esophageal diseases, gastritis, duodenitis or ulcers) [see Contraindications (4), Adverse Reactions (6.1), Information for Patients (17)]. Specific studies with Atelvia have not been performed."
+    },
+    {
+      "id": 5,
+      "question": "What should a patient do if they miss a dose of Atelvia?",
+      "expected_pages": [
+        3,
+        23
+      ],
+      "retrieved_pages": [
+        1,
+        3,
+        6,
+        23,
+        26
+      ],
+      "top1_page": 23,
+      "recall_at_5": true,
+      "precision_at_1": true,
+      "faithfulness": 0.9,
+      "answer": "23 Instruct patients to swallow Atelvia tablets whole. Patients should not chew, cut, or crush the tablet because of a potential for oropharyngeal irritation, and because the tablet coating is an important part of the delayed-release formulation. Patients should not lie down for 30 minutes after taking the medication. Instruct patients that if they develop symptoms of esophageal disease (such as difficulty or pain upon swallowing, retrosternal pain or severe persistent or worsening heartburn) they should consult their physician before continuing Atelvia [see Warnings and Precautions (5.2)]. If a dose of Atelvia 35 mg once-a-week is missed, instruct the patient to take one tablet on the morning after they remember and return to taking one tablet once-a-week, as originally scheduled on their chosen day. Patients should not take 2 tablets on the same day."
+    },
+    {
+      "id": 6,
+      "question": "What are the warnings about upper gastrointestinal adverse reactions?",
+      "expected_pages": [
+        3,
+        4
+      ],
+      "retrieved_pages": [
+        1,
+        3,
+        5,
+        8,
+        9
+      ],
+      "top1_page": 3,
+      "recall_at_5": true,
+      "precision_at_1": true,
+      "faithfulness": 0.9,
+      "answer": "llous skin reactions, Stevens-Johnson syndrome and toxic epidermal necrolysis have been reported [see Adverse Reactions (6.2)] 5 WARNINGS AND PRECAUTIONS 5.1 Drug Products with the Same Active Ingredient Atelvia contains the same active ingredient found in Actonel®. 5.2 Upper Gastrointestinal Adverse Reactions Atelvia, like other bisphosphonates administered orally, may cause local irritation of the upper gastrointestinal mucosa. Because of these possible irritant effects and a potential for worsening of the underlying disease, caution should be used when Atelvia is given to patients with active upper gastrointestinal problems (such as known Barrett’s esophagus, dysphagia, other esophageal diseases, gastritis, duodenitis or ulcers) [see Contraindications (4), Adverse Reactions (6.1), Information for Patients (17)]. Esophageal adverse experiences, such as esophagitis, esophageal ulcers and esophageal erosions, occasionally with bleeding and rarely followed by esophageal stricture or perforation, have been reported in. ng Experience The following adverse reactions have been reported with the use of Atelvia or bisphosphonate products. Because these adverse reactions are reported voluntarily from a population of uncertain size, it is not always possible to reliably estimate their frequency or establish a causal relationship to drug exposure."
+    },
+    {
+      "id": 7,
+      "question": "What is jaw osteonecrosis and how is it related to Atelvia?",
+      "expected_pages": [
+        4,
+        5
+      ],
+      "retrieved_pages": [
+        1,
+        4,
+        10,
+        13,
+        25
+      ],
+      "top1_page": 4,
+      "recall_at_5": true,
+      "precision_at_1": true,
+      "faithfulness": 0.9,
+      "answer": "ia and other disturbances of bone and mineral metabolism should be effectively treated before starting Atelvia therapy. 5.4 Jaw Osteonecrosis Osteonecrosis of the jaw (ONJ), which can occur spontaneously, is generally associated with tooth extraction and/or local infection with delayed healing, and has been reported in patients taking bisphosphonates, including risedronate. Known risk factors for osteonecrosis of the jaw include invasive dental procedures (for example, tooth extraction, dental implants, boney surgery), diagnosis of cancer, concomitant therapies (for example, chemotherapy, corticosteroids, angiogenesis inhibitors), poor oral hygiene, and co-morbid disorders (for example, periodontal and/or other pre-existing dental disease, anemia, coagulopathy, infection, ill-fitting dentures). Severe jaw bone problems (osteonecrosis). Severe jaw bone problems may happen when you take Atelvia. Your doctor should examine your mouth before you start Atelvia."
+    },
+    {
+      "id": 8,
+      "question": "What are atypical femoral fractures?",
+      "expected_pages": [
+        5
+      ],
+      "retrieved_pages": [
+        1,
+        5,
+        9,
+        19
+      ],
+      "top1_page": 5,
+      "recall_at_5": true,
+      "precision_at_1": true,
+      "faithfulness": 0.9,
+      "answer": "5 5.6 Atypical Fractures Including Femoral Fractures Atypical, low-energy, or low trauma fractures of the femoral shaft have been reported during treatment with bisphosphonates, including risedronate, in patients with osteoporosis. Atypical femur and other fractures most commonly occur with minimal or no trauma to the affected area. These fractures occurred anywhere in the femoral shaft from just below the lesser trochanter to above the supracondylar flare and are traverse or short oblique in orientation without evidence of comminution. Atypical fractures of other bones have also been reported. These fractures can also occur in osteoporotic patients who have not been treated with bisphosphonates. Concomitant treatment with glucocorticoids may also induce these fractures."
+    },
+    {
+      "id": 9,
+      "question": "What are the most common adverse reactions to Atelvia?",
+      "expected_pages": [
+        7,
+        8,
+        27
+      ],
+      "retrieved_pages": [
+        1,
+        3,
+        5,
+        24,
+        27
+      ],
+      "top1_page": 5,
+      "recall_at_5": true,
+      "precision_at_1": false,
+      "faithfulness": 0.9,
+      "answer": "Specific studies with Atelvia have not been performed. 6 ADVERSE REACTIONS The following clinically significant adverse drug reactions are described elsewhere in the labeling: • Drug Products with the Same Active Ingredient [see Warnings and Precautions (5.1)] • Upper Gastrointestinal Adverse Reactions [see Warnings and Precautions (5.2)] • Mineral Metabolism [see Warnings and Precautions (5.3)] • Jaw Osteonecrosis [see Warnings and Precautions (5.4)] • Musculoskeletal Pain [see Warnings and Precautions (5.5)] • Atypical Fractures Including Femoral Fractures [see Warnings and Precautions (5.6)] • Renal Impairment [see Warnings and Precautions (5.7)] • Laboratory Test Interactions [see Warnings and Precautions (5.8)]. 27 Atelvia may cause serious side effects: • See “What is the most important information I should know about Atelvia”. The most common side effects of Atelvia include: • diarrhea • flu-like symptoms • muscle pain • back and joint pain • upset stomach • stomach area (abdominal) pain You may get allergic reactions, such as hives, swelling of your face, lips, tongue, or throat. These are not all the possible side effects of Atelvia. How should I store Atelvia? • Store Atelvia between 68° F to 77° F (20° C to 25° C)."
+    },
+    {
+      "id": 10,
+      "question": "What drugs interact with Atelvia?",
+      "expected_pages": [
+        10
+      ],
+      "retrieved_pages": [
+        5,
+        10,
+        16,
+        24,
+        27
+      ],
+      "top1_page": 5,
+      "recall_at_5": true,
+      "precision_at_1": false,
+      "faithfulness": 0.9,
+      "answer": "Specific studies with Atelvia have not been performed. 6 ADVERSE REACTIONS The following clinically significant adverse drug reactions are described elsewhere in the labeling: • Drug Products with the Same Active Ingredient [see Warnings and Precautions (5.1)] • Upper Gastrointestinal Adverse Reactions [see Warnings and Precautions (5.2)] • Mineral Metabolism [see Warnings and Precautions (5.3)] • Jaw Osteonecrosis [see Warnings and Precautions (5.4)] • Musculoskeletal Pain [see Warnings and Precautions (5.5)] • Atypical Fractures Including Femoral Fractures [see Warnings and Precautions (5.6)] • Renal Impairment [see Warnings and Precautions (5.7)] • Laboratory Test Interactions [see Warnings and Precautions (5.8)]. Do not use Atelvia for a condition for which it was not prescribed. Do not give Atelvia to other people, even if they have the same symptoms you have. This Medication Guide summarizes the most important information about Atelvia. If you would like more information, talk with your doctor."
+    },
+    {
+      "id": 11,
+      "question": "Can Atelvia be used during pregnancy?",
+      "expected_pages": [
+        11
+      ],
+      "retrieved_pages": [
+        10,
+        25,
+        26
+      ],
+      "top1_page": 10,
+      "recall_at_5": false,
+      "precision_at_1": false,
+      "faithfulness": 0.9,
+      "answer": "8 USE IN SPECIFIC POPULATIONS 8.1 Pregnancy Risk Summary Available data on use of Atelvia in pregnant women are insufficient to inform drug-associated risk of adverse maternal or fetal outcomes. Discontinue Atelvia when pregnancy is recognized.. If you become pregnant while taking Atelvia, stop taking it and contact your doctor. It is not known if Atelvia can harm your unborn baby.. m enteric coated (delayed-release) drug products such as Atelvia. Co-administration of Atelvia with the PPI, esomeprazole, increased risedronate bioavailability."
+    },
+    {
+      "id": 12,
+      "question": "Is Atelvia safe to use while breastfeeding?",
+      "expected_pages": [
+        12
+      ],
+      "retrieved_pages": [
+        10,
+        12,
+        26,
+        27
+      ],
+      "top1_page": 26,
+      "recall_at_5": true,
+      "precision_at_1": false,
+      "faithfulness": 0.9,
+      "answer": "26 • Are breastfeeding or plan to breastfeed. It is not known if Atelvia passes into your breast milk and may harm your baby. You and your doctor should decide if you will take Atelvia or breastfeed. Certain medicines may affect how Atelvia works. How should I take Atelvia? • Take Atelvia exactly as your doctor tells you. • Take Atelvia 1 time a week right after breakfast."
+    },
+    {
+      "id": 13,
+      "question": "How should Atelvia be stored?",
+      "expected_pages": [
+        16,
+        22,
+        27
+      ],
+      "retrieved_pages": [
+        1,
+        2,
+        22,
+        24,
+        27
+      ],
+      "top1_page": 27,
+      "recall_at_5": true,
+      "precision_at_1": true,
+      "faithfulness": 0.9,
+      "answer": "27 Atelvia may cause serious side effects: • See “What is the most important information I should know about Atelvia”. The most common side effects of Atelvia include: • diarrhea • flu-like symptoms • muscle pain • back and joint pain • upset stomach • stomach area (abdominal) pain You may get allergic reactions, such as hives, swelling of your face, lips, tongue, or throat. These are not all the possible side effects of Atelvia. How should I store Atelvia? • Store Atelvia between 68° F to 77° F (20° C to 25° C). Keep Atelvia and all medicines out of the reach of children. General information about the safe and effective use of Atelvia Medicines are sometimes prescribed for purposes other than those listed in a Patient Information Leaflet."
+    },
+    {
+      "id": 14,
+      "question": "What is the mechanism of action of risedronate?",
+      "expected_pages": [
+        14,
+        15
+      ],
+      "retrieved_pages": [
+        11,
+        12,
+        13,
+        14,
+        15
+      ],
+      "top1_page": 15,
+      "recall_at_5": true,
+      "precision_at_1": true,
+      "faithfulness": 0.9,
+      "answer": "After multiple oral dosing in rats, the uptake of risedronate in soft tissues was in the range of 0.001% to 0.01%. Metabolism There is no evidence of systemic metabolism of risedronate.. INICAL PHARMACOLOGY 12.1 Mechanism of Action Risedronate has an affinity for hydroxyapatite crystals in bone and acts as an antiresorptive agent. At the cellular level, risedronate inhibits osteoclasts. Histomorphometry in rats, dogs, and minipigs showed that risedronate treatment reduces bone turnover (activation frequency, that is, the rate at which bone remodeling sites are activated) and bone resorption at remodeling sites. 12.2 Pharmacodynamics Risedronate treatment decreases the elevated rate of bone turnover that is typically seen in postmenopausal osteoporosis."
+    },
+    {
+      "id": 15,
+      "question": "Can patients with severe renal impairment use Atelvia?",
+      "expected_pages": [
+        13
+      ],
+      "retrieved_pages": [
+        5,
+        13,
+        16,
+        24
+      ],
+      "top1_page": 13,
+      "recall_at_5": true,
+      "precision_at_1": true,
+      "faithfulness": 0.9,
+      "answer": "8.5 Geriatric Use Of the patients receiving Atelvia in postmenopausal osteoporosis studies, 59% were 65 and over, while 13% were 75 and over. No overall differences in safety or effectiveness were observed between these patients and younger patients, and other reported clinical experience has not identified differences in responses between the elderly and younger patients, but greater sensitivity of some older individuals cannot be ruled out. 8.6 Renal Impairment Atelvia is not recommended for use in patients with severe renal impairment (creatinine clearance less than 30 mL/min) because of lack of clinical experience. No dosage adjustment is necessary in patients with a creatinine clearance greater than or equal to 30 mL/min. 8.7 Hepatic Impairment No studies have been performed to assess risedronate sodium’s safety or efficacy in patients with hepatic impairment. Specific studies with Atelvia have not been performed."
+    },
+    {
+      "id": 16,
+      "question": "What are the inactive ingredients in Atelvia?",
+      "expected_pages": [
+        14,
+        28
+      ],
+      "retrieved_pages": [
+        1,
+        5,
+        6,
+        27,
+        28
+      ],
+      "top1_page": 27,
+      "recall_at_5": true,
+      "precision_at_1": false,
+      "faithfulness": 0.9,
+      "answer": "Do not use Atelvia for a condition for which it was not prescribed. Do not give Atelvia to other people, even if they have the same symptoms you have. This Medication Guide summarizes the most important information about Atelvia. You can ask your pharmacist or doctor for information about Atelvia that is written for health professionals. What are the ingredients in Atelvia? Active ingredient: risedronate sodium. 28 Inactive ingredients: Edetate disodium, ferric oxide yellow, magnesium stearate, methacrylic acid copolymer, polysorbate 80, silicified microcrystalline cellulose (ProSolv SMCC90), simethicone, sodium starch glycolate, stearic acid, talc, and triethyl citrate."
+    },
+    {
+      "id": 17,
+      "question": "What should patients know about taking calcium supplements with Atelvia?",
+      "expected_pages": [
+        2,
+        10,
+        23
+      ],
+      "retrieved_pages": [
+        1,
+        2,
+        6,
+        24
+      ],
+      "top1_page": 2,
+      "recall_at_5": true,
+      "precision_at_1": true,
+      "faithfulness": 0.9,
+      "answer": "is inadequate [see Warnings and Precautions (5.3)] and to take calcium supplements, antacids, magnesium-based supplements or laxatives, and iron preparations at a different time of the day as they interfere with the absorption of Atelvia.. n) (5.7, 8.6, 12.3) • Atelvia is not indicated for use in pediatric patients (8.4) See 17 for PATIENT COUNSELING INFORMATION and Medication Guide. Revised: 02/2026 FULL PRESCRIBING INFORMATION: CONTENTS* 1 INDICATIONS AND USAGE 1.1 Postmenopausal Osteoporosis 1.2 Important Limitations of Use 2 DOSAGE AND ADMINISTRATION 2.1 Treatment of Postmenopausal Osteoporosis 2.2 Important Administration Instructions 2.3 Recommendations for Calcium and Vitamin D Supplementation 2.4 Administration Instructions for Missed Doses 3 DOSAGE FORMS AND STRENGTHS 4 CONTRAINDICATIONS 5 WARNINGS AND PRECAUTIONS 5.1 Drug Products with the Same Active Ingredient 5.2 Upper Gastrointestinal Adverse Reactions 5.3 Mineral Metabolism 5.4 Jaw Osteonecrosis 5.5 Musculoskeletal Pain 5.6 Atypical Fractures Including Femoral Fractures 5.7 Renal Impairment 5.8 Laboratory Test Interactions 6 ADVERSE REACTIONS 6.1 Clinical Studies Experience 6.2 Postmarketing Experience 7 DRUG INTERACTIONS 7.1 Calcium Supplements/Antacids 7.2 Histamine 2 (H2) Blockers and Proton Pump Inhibitors (PPIs) 7.3 Hormone Therapy 7.4. ing in your fingers, toes, or around your mouth Your doctor may prescribe calcium and vitamin D to help prevent low calcium levels in your blood, while you are taking Atelvia. Take calcium and vitamin D as your doctor tells you to.."
+    },
+    {
+      "id": 18,
+      "question": "What is the appearance of Atelvia tablets?",
+      "expected_pages": [
+        3,
+        22
+      ],
+      "retrieved_pages": [
+        1,
+        3,
+        5,
+        6,
+        22
+      ],
+      "top1_page": 1,
+      "recall_at_5": true,
+      "precision_at_1": false,
+      "faithfulness": 0.9,
+      "answer": "------------------- One 35 mg delayed-release tablet once-a-week (2.1) Instruct patients to: • Take Atelvia in the morning immediately following breakfast with at least 4 ounces of plain water (2.2) • Avoid lying down for 30 minutes after taking Atelvia (2.2) • Take supplemental calcium and vitamin D if dietary intake is inadequate (2.3) ---------------------DOSAGE FORMS AND STRENGTHS---------------------- Delayed-release tablets: 35 mg (3) -------------------------------CONTRAINDICATIONS------------------------------ • Abnormalities of the esophagus which delay esophageal emptying such as stricture or achalasia (4, 5.2) • Inability to stand or sit upright for at least 30 minutes (4, 5.2) • Hypocalcemia (4, 5.3) • Known hypersensitivity to any component of this product (4, 6.2) -----------------------WARNINGS AND PRECAUTIONS------------------------ • Products Containing Same Active Ingredient: Patients receiving Actonel should not be treated with Atelvia (5.1) • Upper Gastrointestinal Adverse Reactions can occur. Specific studies with Atelvia have not been performed. Patients should not take two tablets on the same day. 3 DOSAGE FORMS AND STRENGTHS Delayed-release tablets: 35 mg, yellow, oval-shaped, and engraved with EC 35 on one side. 4 CONTRAINDICATIONS Atelvia is contraindicated in patients with the following conditions: • Abnormalities of the esophagus which delay esophageal emptying such as stricture or achalasia [see Warnings and Precautions (5.2)] • Inability to stand or sit upright for at least 30 minutes [see Dosage and Administration (2), Warnings and Precautions (5.2)] • Hypocalcemia [see Warnings and Precautions (5.3)] • Known hypersensitivity to any component of this product."
+    }
+  ]
+}

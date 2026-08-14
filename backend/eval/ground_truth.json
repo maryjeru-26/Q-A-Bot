@@ -1,0 +1,128 @@
+[
+  {
+    "id": 1,
+    "question": "What is Atelvia indicated for?",
+    "expected_pages": [1, 2],
+    "expected_sections": ["indications"],
+    "key_terms": ["postmenopausal osteoporosis", "bisphosphonate"]
+  },
+  {
+    "id": 2,
+    "question": "What is the recommended dosage of Atelvia?",
+    "expected_pages": [2, 3],
+    "expected_sections": ["dosage"],
+    "key_terms": ["35 mg", "once-a-week", "delayed-release"]
+  },
+  {
+    "id": 3,
+    "question": "How should a patient take Atelvia?",
+    "expected_pages": [2, 3, 23],
+    "expected_sections": ["dosage", "patient counseling"],
+    "key_terms": ["breakfast", "water", "4 ounces", "upright", "30 minutes"]
+  },
+  {
+    "id": 4,
+    "question": "What are the contraindications for Atelvia?",
+    "expected_pages": [3],
+    "expected_sections": ["contraindications"],
+    "key_terms": ["esophagus", "hypocalcemia", "hypersensitivity"]
+  },
+  {
+    "id": 5,
+    "question": "What should a patient do if they miss a dose of Atelvia?",
+    "expected_pages": [3, 23],
+    "expected_sections": ["dosage", "patient counseling"],
+    "key_terms": ["missed dose", "next morning", "two tablets"]
+  },
+  {
+    "id": 6,
+    "question": "What are the warnings about upper gastrointestinal adverse reactions?",
+    "expected_pages": [3, 4],
+    "expected_sections": ["warnings"],
+    "key_terms": ["esophagus", "ulcer", "gastrointestinal", "irritation"]
+  },
+  {
+    "id": 7,
+    "question": "What is jaw osteonecrosis and how is it related to Atelvia?",
+    "expected_pages": [4, 5],
+    "expected_sections": ["warnings"],
+    "key_terms": ["jaw", "osteonecrosis", "ONJ", "dental"]
+  },
+  {
+    "id": 8,
+    "question": "What are atypical femoral fractures?",
+    "expected_pages": [5],
+    "expected_sections": ["warnings"],
+    "key_terms": ["atypical", "femoral", "thigh", "low-energy"]
+  },
+  {
+    "id": 9,
+    "question": "What are the most common adverse reactions to Atelvia?",
+    "expected_pages": [7, 8, 27],
+    "expected_sections": ["adverse reactions"],
+    "key_terms": ["diarrhea", "abdominal pain", "arthralgia", "back pain"]
+  },
+  {
+    "id": 10,
+    "question": "What drugs interact with Atelvia?",
+    "expected_pages": [10],
+    "expected_sections": ["drug interactions"],
+    "key_terms": ["calcium", "antacids", "PPI", "esomeprazole"]
+  },
+  {
+    "id": 11,
+    "question": "Can Atelvia be used during pregnancy?",
+    "expected_pages": [11],
+    "expected_sections": ["pregnancy"],
+    "key_terms": ["pregnancy", "fetal harm", "not recommended"]
+  },
+  {
+    "id": 12,
+    "question": "Is Atelvia safe to use while breastfeeding?",
+    "expected_pages": [12],
+    "expected_sections": ["lactation"],
+    "key_terms": ["breastfeeding", "human milk", "lacteal"]
+  },
+  {
+    "id": 13,
+    "question": "How should Atelvia be stored?",
+    "expected_pages": [16, 22, 27],
+    "expected_sections": ["how supplied"],
+    "key_terms": ["room temperature", "20 to 25", "68 to 77"]
+  },
+  {
+    "id": 14,
+    "question": "What is the mechanism of action of risedronate?",
+    "expected_pages": [14, 15],
+    "expected_sections": ["clinical pharmacology"],
+    "key_terms": ["hydroxyapatite", "osteoclast", "antiresorptive"]
+  },
+  {
+    "id": 15,
+    "question": "Can patients with severe renal impairment use Atelvia?",
+    "expected_pages": [13],
+    "expected_sections": ["renal impairment"],
+    "key_terms": ["creatinine clearance", "30 mL/min", "not recommended"]
+  },
+  {
+    "id": 16,
+    "question": "What are the inactive ingredients in Atelvia?",
+    "expected_pages": [14, 28],
+    "expected_sections": ["dosage forms"],
+    "key_terms": ["edetate disodium", "ferric oxide", "magnesium stearate"]
+  },
+  {
+    "id": 17,
+    "question": "What should patients know about taking calcium supplements with Atelvia?",
+    "expected_pages": [2, 10, 23],
+    "expected_sections": ["dosage", "drug interactions"],
+    "key_terms": ["calcium", "supplements", "interfere", "absorption"]
+  },
+  {
+    "id": 18,
+    "question": "What is the appearance of Atelvia tablets?",
+    "expected_pages": [3, 22],
+    "expected_sections": ["dosage forms"],
+    "key_terms": ["yellow", "oval-shaped", "EC 35", "35 mg"]
+  }
+]
