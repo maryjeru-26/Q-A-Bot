@@ -3,12 +3,12 @@
   "timestamp": "2026-08-14T07:14:36.123227",
   "metrics": {
     "retrieval_recall_at_5": 0.8889,
-    "retrieval_precision_at_1": 0.87,
-    "faithfulness_pass_rate": 0.9444,
+    "retrieval_precision_at_1": 0.8333,
+    "faithfulness_mean_score": 0.9,
     "total_questions": 18,
     "recall_hits": 16,
     "precision_hits": 15,
-    "faithfulness_hits": 17
+    "faithfulness_scored_questions": 18
   },
   "details": [
     {
@@ -47,7 +47,7 @@
       ],
       "top1_page": 23,
       "recall_at_5": true,
-      "precision_at_1": false,
+      "precision_at_1": true,
       "faithfulness": 0.9,
       "answer": "23 Instruct patients to swallow Atelvia tablets whole. Instruct patients that if they develop symptoms of esophageal disease (such as difficulty or pain upon swallowing, retrosternal pain or severe persistent or worsening heartburn) they should consult their physician before continuing Atelvia [see Warnings and Precautions (5.2)]. If a dose of Atelvia 35 mg once-a-week is missed, instruct the patient to take one tablet on the morning after they remember and return to taking one tablet once-a-week, as originally scheduled on their chosen day. As treatment with Atelvia resulted in a significantly higher incidence of abdominal pain when administered before breakfast under fasting conditions, safety results that follow refer only to Atelvia 35 mg once-a-week immediately following breakfast and risedronate sodium immediate-release 5 mg daily. The incidence of all-cause mortality was 0.0% in the Atelvia 35 mg once-a-week group and 0.3% in the risedronate sodium immediate-release 5 mg daily group. The incidence of serious adverse reactions was 6.5% in the Atelvia 35 mg once-a-week group and 7.2% in the risedronate sodium immediate-release 5 mg daily group."
     },
@@ -221,7 +221,7 @@
       ],
       "top1_page": 10,
       "recall_at_5": false,
-      "precision_at_1": false,
+      "precision_at_1": true,
       "faithfulness": 0.9,
       "answer": "8 USE IN SPECIFIC POPULATIONS 8.1 Pregnancy Risk Summary Available data on use of Atelvia in pregnant women are insufficient to inform drug-associated risk of adverse maternal or fetal outcomes. Discontinue Atelvia when pregnancy is recognized.. If you become pregnant while taking Atelvia, stop taking it and contact your doctor. It is not known if Atelvia can harm your unborn baby.. m enteric coated (delayed-release) drug products such as Atelvia. Co-administration of Atelvia with the PPI, esomeprazole, increased risedronate bioavailability."
     },
@@ -239,7 +239,7 @@
       ],
       "top1_page": 26,
       "recall_at_5": true,
-      "precision_at_1": false,
+      "precision_at_1": true,
       "faithfulness": 0.9,
       "answer": "26 • Are breastfeeding or plan to breastfeed. It is not known if Atelvia passes into your breast milk and may harm your baby. You and your doctor should decide if you will take Atelvia or breastfeed. Certain medicines may affect how Atelvia works. How should I take Atelvia? • Take Atelvia exactly as your doctor tells you. • Take Atelvia 1 time a week right after breakfast."
     },
@@ -318,7 +318,7 @@
       ],
       "top1_page": 27,
       "recall_at_5": true,
-      "precision_at_1": false,
+      "precision_at_1": true,
       "faithfulness": 0.9,
       "answer": "Do not use Atelvia for a condition for which it was not prescribed. Do not give Atelvia to other people, even if they have the same symptoms you have. This Medication Guide summarizes the most important information about Atelvia. You can ask your pharmacist or doctor for information about Atelvia that is written for health professionals. What are the ingredients in Atelvia? Active ingredient: risedronate sodium. 28 Inactive ingredients: Edetate disodium, ferric oxide yellow, magnesium stearate, methacrylic acid copolymer, polysorbate 80, silicified microcrystalline cellulose (ProSolv SMCC90), simethicone, sodium starch glycolate, stearic acid, talc, and triethyl citrate."
     },
@@ -358,7 +358,7 @@
       ],
       "top1_page": 1,
       "recall_at_5": true,
-      "precision_at_1": false,
+      "precision_at_1": true,
       "faithfulness": 0.9,
       "answer": "------------------- One 35 mg delayed-release tablet once-a-week (2.1) Instruct patients to: • Take Atelvia in the morning immediately following breakfast with at least 4 ounces of plain water (2.2) • Avoid lying down for 30 minutes after taking Atelvia (2.2) • Take supplemental calcium and vitamin D if dietary intake is inadequate (2.3) ---------------------DOSAGE FORMS AND STRENGTHS---------------------- Delayed-release tablets: 35 mg (3) -------------------------------CONTRAINDICATIONS------------------------------ • Abnormalities of the esophagus which delay esophageal emptying such as stricture or achalasia (4, 5.2) • Inability to stand or sit upright for at least 30 minutes (4, 5.2) • Hypocalcemia (4, 5.3) • Known hypersensitivity to any component of this product (4, 6.2) -----------------------WARNINGS AND PRECAUTIONS------------------------ • Products Containing Same Active Ingredient: Patients receiving Actonel should not be treated with Atelvia (5.1) • Upper Gastrointestinal Adverse Reactions can occur. Specific studies with Atelvia have not been performed. Patients should not take two tablets on the same day. 3 DOSAGE FORMS AND STRENGTHS Delayed-release tablets: 35 mg, yellow, oval-shaped, and engraved with EC 35 on one side. 4 CONTRAINDICATIONS Atelvia is contraindicated in patients with the following conditions: • Abnormalities of the esophagus which delay esophageal emptying such as stricture or achalasia [see Warnings and Precautions (5.2)] • Inability to stand or sit upright for at least 30 minutes [see Dosage and Administration (2), Warnings and Precautions (5.2)] • Hypocalcemia [see Warnings and Precautions (5.3)] • Known hypersensitivity to any component of this product."
     }
