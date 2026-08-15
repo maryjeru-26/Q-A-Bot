@@ -33,3 +33,31 @@ def generate_answer(history, question, chunks, patient_specific=False):
         temperature=0.2,
     )
     return response.choices[0].message.content.strip()
+
+
+def normalise_answer(answer):
+    """Rewrite a generated answer for a general audience without changing its meaning."""
+    api_key = os.getenv("GROQ_API") or os.getenv("GROQ_API_KEY")
+    if not api_key:
+        raise RuntimeError("Groq API key is not configured on the server")
+
+    from groq import Groq
+
+    system = (
+        "You rewrite healthcare and medicine information for a general audience. "
+        "Use simple, everyday language and short sentences. Keep every fact, number, "
+        "medicine name, warning, limitation, and instruction exactly consistent with the "
+        "original answer. Do not add medical knowledge, diagnosis, recommendations, or "
+        "advice. If a medical term must remain, explain it briefly in plain language. "
+        "Keep any healthcare-professional disclaimer. Return only the simplified answer."
+    )
+    client = Groq(api_key=api_key)
+    response = client.chat.completions.create(
+        model=os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile"),
+        messages=[
+            {"role": "system", "content": system},
+            {"role": "user", "content": f"ORIGINAL ANSWER:\n{answer}"},
+        ],
+        temperature=0.1,
+    )
+    return response.choices[0].message.content.strip()

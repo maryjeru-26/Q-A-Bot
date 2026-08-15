@@ -15,7 +15,7 @@ from auth import hash_password, verify_password, create_token, get_current_user
 from services.rag_service import (ensure_default_document, index_pdf, retrieve,
                                   has_sufficient_context, is_patient_specific,
                                   NOT_FOUND_MESSAGE, highlight_excerpt)
-from services.llm_service import generate_answer
+from services.llm_service import generate_answer, normalise_answer
 from services.chroma_service import delete_document as delete_chroma_document, evidence_for_page
 
 
@@ -291,6 +291,27 @@ def remove_message(message_id: str, current_user=Depends(get_current_user)):
             messages_collection.delete_many({"message_id": {"$in": linked_ids}, "user_id": user_id})
             deleted_ids.extend(linked_ids)
     return {"message": "Question deleted", "deleted_message_ids": deleted_ids}
+
+
+@app.post("/api/messages/{message_id}/normalise")
+def normalise_message(message_id: str, current_user=Depends(get_current_user)):
+    """Return and save a plain-language version of an existing assistant answer."""
+    message = messages_collection.find_one({
+        "message_id": message_id,
+        "user_id": current_user["user_id"],
+        "role": "assistant",
+    })
+    if not message:
+        raise HTTPException(404, "Answer not found")
+
+    simplified = message.get("normalised_content")
+    if not simplified:
+        try:
+            simplified = normalise_answer(message["content"])
+        except Exception:
+            raise HTTPException(503, "Plain-language conversion is temporarily unavailable. Please try again.")
+        messages_collection.update_one({"_id": message["_id"]}, {"$set": {"normalised_content": simplified}})
+    return {"normalised_answer": simplified}
 
 
 @app.post("/api/chat")
