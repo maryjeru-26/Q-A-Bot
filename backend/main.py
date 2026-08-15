@@ -499,7 +499,7 @@ def run_evaluation(current_user=Depends(get_current_user)):
                 try:
                     client = Groq(api_key=api_key)
                     response = client.chat.completions.create(
-                        model=os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile"),
+                        model=os.getenv("GROQ_MODEL", "openai/gpt-oss-120b"),
                         messages=[{"role": "user", "content": prompt}],
                         temperature=0.0,
                         max_tokens=10,

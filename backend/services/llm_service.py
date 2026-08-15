@@ -28,7 +28,7 @@ def generate_answer(history, question, chunks, patient_specific=False):
     prompt = f"CONVERSATION HISTORY:\n{history_text}\n\nRETRIEVED DOCUMENT SOURCES:\n{sources}\n\nCURRENT QUESTION:\n{question}"
     client = Groq(api_key=api_key)
     response = client.chat.completions.create(
-        model=os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile"),
+        model=os.getenv("GROQ_MODEL", "openai/gpt-oss-120b"),
         messages=[{"role": "system", "content": system}, {"role": "user", "content": prompt}],
         temperature=0.2,
     )
@@ -53,7 +53,7 @@ def normalise_answer(answer):
     )
     client = Groq(api_key=api_key)
     response = client.chat.completions.create(
-        model=os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile"),
+        model=os.getenv("GROQ_MODEL", "openai/gpt-oss-120b"),
         messages=[
             {"role": "system", "content": system},
             {"role": "user", "content": f"ORIGINAL ANSWER:\n{answer}"},
