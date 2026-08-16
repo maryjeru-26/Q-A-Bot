@@ -67,6 +67,7 @@ function Dashboard() {
   const [normalising, setNormalising] = useState({});
   const inputRef = useRef(null);
   const scrollRef = useRef(null);
+  const messageCountRef = useRef(0);
   const token = localStorage.getItem("token");
 
   const request = async (path, options = {}) => {
@@ -88,7 +89,11 @@ function Dashboard() {
     Promise.all([refreshSessions(), refreshDocuments()]).catch((error) => setNotice(error.message));
   }, []);
   useEffect(() => { if (view === "dashboard") refreshAnalytics().catch((error) => setNotice(error.message)); }, [view]);
-  useEffect(() => { scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" }); }, [messages, sending]);
+  useEffect(() => {
+    const messageWasAdded = messages.length > messageCountRef.current;
+    messageCountRef.current = messages.length;
+    if (messageWasAdded || sending) scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
+  }, [messages, sending]);
 
   const newChat = async (documentId = null) => {
     try {
