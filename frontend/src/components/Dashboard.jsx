@@ -65,9 +65,11 @@ function Dashboard() {
   const [activity, setActivity] = useState(null);
   const [sourcePreview, setSourcePreview] = useState(null);
   const [normalising, setNormalising] = useState({});
+  const [recording, setRecording] = useState(false);
   const inputRef = useRef(null);
   const scrollRef = useRef(null);
   const messageCountRef = useRef(0);
+  const recognitionRef = useRef(null);
   const token = localStorage.getItem("token");
 
   const request = async (path, options = {}) => {
@@ -94,6 +96,7 @@ function Dashboard() {
     messageCountRef.current = messages.length;
     if (messageWasAdded || sending) scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
   }, [messages, sending]);
+  useEffect(() => () => recognitionRef.current?.stop(), []);
 
   const newChat = async (documentId = null) => {
     try {
@@ -172,6 +175,27 @@ function Dashboard() {
       document.body.appendChild(link); link.click(); link.remove(); URL.revokeObjectURL(link.href);
     } catch (error) { setNotice(error.message); }
   };
+  const toggleRecording = () => {
+    if (recording) { recognitionRef.current?.stop(); return; }
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) { setNotice("Voice input is not supported by this browser. Try Chrome or Microsoft Edge."); return; }
+    const recognition = new SpeechRecognition();
+    recognition.lang = navigator.language || "en-US";
+    recognition.continuous = false;
+    recognition.interimResults = true;
+    recognition.onstart = () => setRecording(true);
+    recognition.onresult = (event) => {
+      let transcript = "";
+      for (let index = event.resultIndex; index < event.results.length; index += 1) transcript += event.results[index][0].transcript;
+      setText(transcript.trim());
+    };
+    recognition.onerror = (event) => {
+      if (event.error !== "aborted") setNotice(event.error === "not-allowed" ? "Microphone access was denied. Allow microphone access and try again." : "Voice input could not be started. Please try again.");
+    };
+    recognition.onend = () => { setRecording(false); recognitionRef.current = null; inputRef.current?.focus(); };
+    recognitionRef.current = recognition;
+    recognition.start();
+  };
   const openSource = async (citation, question = "") => {
     try {
       let evidence = citation.evidence, highlight = citation.highlight;
@@ -203,7 +227,7 @@ function Dashboard() {
       {view === "chat" && <section className="chat-view">
         <header className="chat-header"><div><h1>{activeSession?.title || "Document chat"}</h1><p>{currentDoc ? `Using ${currentDoc.file_name}` : "Choose a document or start asking"}</p></div>{activeSession && <div className="chat-header-actions"><button className="quiet" onClick={() => downloadConversation("txt")}>Download text</button><button className="quiet" onClick={() => downloadConversation("pdf")}>Download PDF</button><button className="quiet" onClick={renameSession}>Rename</button></div>}</header>
         <div className="messages" ref={scrollRef}>{!activeSession && <div className="welcome"><div className="welcome-mark">✦</div><h2>Ask your documents anything</h2><p>Start a new chat, choose a PDF, and get grounded answers with exact page sources.</p><button onClick={() => newChat()}>Start a conversation</button></div>}{messages.map((message, index) => <article className={`message ${message.role}`} key={`${message.created_at}-${index}`}><div className="avatar">{message.role === "assistant" ? "✦" : "You"}</div><div className="message-body"><div className="message-text">{message.showingNormalised ? message.normalised_content : message.content}</div>{message.showingNormalised && <div className="plain-language-label">Plain-language version</div>}{message.role === "user" && message.message_id && <div className="message-actions"><button className="delete-question" onClick={() => removeQuestion(message.message_id)}>Delete question</button></div>}{message.citations?.length > 0 && <div className="sources"><b>Sources</b>{message.citations.map((citation, i) => <button className="source-card" key={i} onClick={() => openSource(citation, messages[index - 1]?.role === "user" ? messages[index - 1].content : "")}>📄 <span>{citation.document}</span> · Page {citation.page}{citation.page_end !== citation.page ? `–${citation.page_end}` : ""}{citation.section ? ` · ${citation.section}` : ""}</button>)}</div>}{message.role === "assistant" && <div className="message-actions"><button onClick={() => navigator.clipboard?.writeText(message.showingNormalised ? message.normalised_content : message.content)}>Copy</button><button onClick={() => normaliseAnswer(message.message_id)} disabled={!message.message_id || normalising[message.message_id]}>{normalising[message.message_id] ? "Simplifying…" : "Normalise"}</button>{message.normalised_content && <button onClick={() => setMessages((items) => items.map((item) => item.message_id === message.message_id ? { ...item, showingNormalised: !item.showingNormalised } : item))}>{message.showingNormalised ? "Show original" : "Show simplified"}</button>}<button onClick={() => { const previous = messages[index - 1]; if (previous?.role === "user") send(previous.content); }}>Regenerate</button></div>}</div></article>)}{sending && <article className="message assistant"><div className="avatar">✦</div><div className="typing"><span></span><span></span><span></span></div></article>}</div>
-        <footer className="composer"><div className="document-picker"><select value={activeSession?.current_document_id || ""} onChange={(e) => selectDocument(e.target.value || null)}><option value="">Default / select a document</option>{documents.map((doc) => <option value={doc.document_id} key={doc.document_id}>{doc.file_name}</option>)}</select><label className="upload-button">{uploading || "＋ Upload PDF"}<input type="file" accept="application/pdf,.pdf" onChange={upload} disabled={!!uploading}/></label></div><div className="input-row"><textarea ref={inputRef} value={text} onChange={(e) => setText(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send(); } }} placeholder="Ask about your document…" rows="1" disabled={!activeSession || sending}/><button onClick={() => send()} disabled={!text.trim() || !activeSession || sending}>↑</button></div><small>Paperwise can make mistakes. Check the source pages for important decisions.</small></footer>
+        <footer className="composer"><div className="document-picker"><select value={activeSession?.current_document_id || ""} onChange={(e) => selectDocument(e.target.value || null)}><option value="">Default / select a document</option>{documents.map((doc) => <option value={doc.document_id} key={doc.document_id}>{doc.file_name}</option>)}</select><label className="upload-button">{uploading || "＋ Upload PDF"}<input type="file" accept="application/pdf,.pdf" onChange={upload} disabled={!!uploading}/></label></div><div className="input-row"><textarea ref={inputRef} value={text} onChange={(e) => setText(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send(); } }} placeholder="Ask about your document…" rows="1" disabled={!activeSession || sending}/><button className={`record-button ${recording ? "recording" : ""}`} onClick={toggleRecording} disabled={!activeSession || sending} aria-label={recording ? "Stop recording" : "Start voice input"} title={recording ? "Stop recording" : "Speak your question"}>{recording ? "■" : "🎙"}</button><button onClick={() => send()} disabled={!text.trim() || !activeSession || sending}>↑</button></div><small>{recording ? "Listening… Speak your question, then review it and press Enter." : "Paperwise can make mistakes. Check the source pages for important decisions."}</small></footer>
       </section>}
       {view === "documents" && <section className="page-view"><header><h1>Documents</h1><p>Your private, indexed PDF library.</p><label className="primary upload-button">{uploading || "＋ Upload PDF"}<input type="file" accept="application/pdf,.pdf" onChange={upload} disabled={!!uploading}/></label></header><div className="document-grid">{documents.map((doc) => <article className="document-card" key={doc.document_id}><div>📄</div><h3>{doc.file_name}</h3><p>{doc.page_count} pages · {doc.chunk_count} chunks</p><span>● Indexed</span><button onClick={() => { setView("chat"); activeSession ? selectDocument(doc.document_id) : newChat(doc.document_id); }}>Use in chat</button><button onClick={() => removeDocument(doc.document_id)}>Delete</button></article>)}</div></section>}
       {view === "guide" && <section className="page-view guide-view"><header><h1>How to use Paperwise</h1><p>Ask grounded questions about your PDFs in a few steps.</p></header><div className="guide-steps"><article><b>1</b><div><h2>Upload a PDF</h2><p>Open <strong>Documents</strong> in the sidebar and select <strong>Upload PDF</strong>. Wait until the file is indexed and marked Ready.</p></div></article><article><b>2</b><div><h2>Start a chat</h2><p>Select <strong>New chat</strong>, then choose the PDF you want to use from the document menu above the message box.</p></div></article><article><b>3</b><div><h2>Ask questions</h2><p>Type your question and press Enter or the send button. Use Shift + Enter to add a new line.</p></div></article><article><b>4</b><div><h2>Check the source</h2><p>Every answer shows the source PDF and the page where its primary evidence was retrieved. Open your PDF to verify important details.</p></div></article><article><b>5</b><div><h2>Continue or manage chats</h2><p>Your chats are saved automatically. Open them from Recent chats, rename or delete them, or delete an individual question with its answer.</p></div></article><article><b>6</b><div><h2>Review activity</h2><p>Open <strong>Dashboard</strong> to view your real query, session, document, and indexing statistics.</p></div></article></div></section>}
