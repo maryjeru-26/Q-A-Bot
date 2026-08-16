@@ -9,3 +9,4 @@ sentence-transformers
 pypdf
 groq
 python-multipart
+reportlab

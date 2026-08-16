@@ -2,9 +2,12 @@ from datetime import datetime, timedelta
 from pathlib import Path
 import shutil
 import uuid
+import io
+import re
+import unicodedata
 from bson import ObjectId
 from fastapi import FastAPI, HTTPException, Depends, UploadFile, File
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, StreamingResponse
 from pydantic import BaseModel, Field
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -140,6 +143,74 @@ def serialize_session(session):
     return session
 
 
+def export_filename(title, extension):
+    """Create a safe download name from a conversation title."""
+    clean = unicodedata.normalize("NFKD", title or "conversation").encode("ascii", "ignore").decode("ascii")
+    clean = re.sub(r'[\\/:*?"<>|]+', " ", clean)
+    clean = re.sub(r"\s+", " ", clean).strip(" .") or "conversation"
+    return f"{clean[:100]}.{extension}"
+
+
+def conversation_export_text(session, messages):
+    lines = [session.get("title") or "Conversation", "=" * 60, ""]
+    for message in messages:
+        role = "You" if message.get("role") == "user" else "Assistant"
+        lines.extend([f"{role}:", message.get("content", ""), ""])
+        for citation in message.get("citations") or []:
+            page, page_end = citation.get("page"), citation.get("page_end")
+            pages = f"Page {page}" if page == page_end or not page_end else f"Pages {page}-{page_end}"
+            lines.append(f"Source: {citation.get('document', 'Document')} — {pages}")
+        if message.get("citations"):
+            lines.append("")
+    return "\n".join(lines).strip() + "\n"
+
+
+@app.get("/api/sessions/{session_id}/export")
+def export_session(session_id: str, format: str = "txt", current_user=Depends(get_current_user)):
+    """Download an owned conversation as a text file or PDF."""
+    if format not in {"txt", "pdf"}:
+        raise HTTPException(400, "Export format must be txt or pdf")
+    session = sessions_collection.find_one({"session_id": session_id, "user_id": current_user["user_id"]})
+    if not session:
+        raise HTTPException(404, "Session not found")
+    messages = list(messages_collection.find({"session_id": session_id, "user_id": current_user["user_id"]}, {"_id": 0}).sort([("created_at", 1), ("_id", 1)]))
+    content = conversation_export_text(session, messages)
+    filename = export_filename(session.get("title"), format)
+    headers = {"Content-Disposition": f'attachment; filename="{filename}"'}
+
+    if format == "txt":
+        return StreamingResponse(io.BytesIO(content.encode("utf-8")), media_type="text/plain; charset=utf-8", headers=headers)
+
+    try:
+        from reportlab.lib.pagesizes import A4
+        from reportlab.lib.styles import getSampleStyleSheet
+        from reportlab.lib.units import cm
+        from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
+    except ImportError:
+        raise HTTPException(503, "PDF export is unavailable because reportlab is not installed")
+
+    def pdf_safe(value):
+        value = unicodedata.normalize("NFKD", value).encode("latin-1", "replace").decode("latin-1")
+        return value.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace("\n", "<br/>")
+
+    buffer = io.BytesIO()
+    document = SimpleDocTemplate(buffer, pagesize=A4, leftMargin=2 * cm, rightMargin=2 * cm,
+                                 topMargin=2 * cm, bottomMargin=2 * cm, title=session.get("title") or "Conversation")
+    styles = getSampleStyleSheet()
+    story = [Paragraph(pdf_safe(session.get("title") or "Conversation"), styles["Title"]), Spacer(1, 14)]
+    for message in messages:
+        role = "You" if message.get("role") == "user" else "Assistant"
+        story += [Paragraph(role, styles["Heading3"]), Paragraph(pdf_safe(message.get("content", "")), styles["BodyText"])]
+        for citation in message.get("citations") or []:
+            page, page_end = citation.get("page"), citation.get("page_end")
+            pages = f"Page {page}" if page == page_end or not page_end else f"Pages {page}-{page_end}"
+            story.append(Paragraph(pdf_safe(f"Source: {citation.get('document', 'Document')} — {pages}"), styles["Italic"]))
+        story.append(Spacer(1, 12))
+    document.build(story)
+    buffer.seek(0)
+    return StreamingResponse(buffer, media_type="application/pdf", headers=headers)
+
+
 @app.get("/api/documents")
 def list_documents(current_user=Depends(get_current_user)):
     # Default content is indexed once per user/hash, maintaining strict vector isolation.
@@ -245,7 +316,7 @@ def get_session(session_id: str, current_user=Depends(get_current_user)):
     session = sessions_collection.find_one({"session_id": session_id, "user_id": current_user["user_id"]})
     if not session:
         raise HTTPException(404, "Session not found")
-    messages = list(messages_collection.find({"session_id": session_id, "user_id": current_user["user_id"]}, {"_id": 0}).sort("created_at", 1))
+    messages = list(messages_collection.find({"session_id": session_id, "user_id": current_user["user_id"]}, {"_id": 0}).sort([("created_at", 1), ("_id", 1)]))
     return {"session": serialize_session(session), "messages": messages}
 
 
@@ -328,7 +399,7 @@ def chat(request: ChatRequest, current_user=Depends(get_current_user)):
         if not default_document:
             raise HTTPException(400, "No PDF is available. Upload a PDF to begin.")
         document_id = default_document["document_id"]
-    history = list(messages_collection.find({"session_id": request.session_id, "user_id": user_id}, {"_id": 0, "role": 1, "content": 1}).sort("created_at", -1).limit(12))
+    history = list(messages_collection.find({"session_id": request.session_id, "user_id": user_id}, {"_id": 0, "role": 1, "content": 1}).sort([("created_at", -1), ("_id", -1)]).limit(12))
     history.reverse()
     chunks = retrieve(user_id, request.message, document_id, history)
     patient_specific = is_patient_specific(request.message)
@@ -353,10 +424,11 @@ def chat(request: ChatRequest, current_user=Depends(get_current_user)):
                       "section": meta.get("section") or None, "evidence": chunks[0]["text"],
                       "highlight": highlight_excerpt(chunks[0]["text"], request.message)}]
     now = datetime.utcnow()
+    answer_time = now + timedelta(microseconds=1)
     user_message_id, assistant_message_id = str(uuid.uuid4()), str(uuid.uuid4())
     messages_collection.insert_many([
         {"message_id": user_message_id, "session_id": request.session_id, "user_id": user_id, "role": "user", "content": request.message, "created_at": now},
-        {"message_id": assistant_message_id, "parent_message_id": user_message_id, "session_id": request.session_id, "user_id": user_id, "role": "assistant", "content": answer, "citations": citations, "created_at": now},
+        {"message_id": assistant_message_id, "parent_message_id": user_message_id, "session_id": request.session_id, "user_id": user_id, "role": "assistant", "content": answer, "citations": citations, "created_at": answer_time},
     ])
     if session["title"] == "New conversation":
         title = " ".join(request.message.strip().split()[:7]).capitalize()
