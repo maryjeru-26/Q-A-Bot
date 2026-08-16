@@ -18,7 +18,7 @@ from auth import hash_password, verify_password, create_token, get_current_user
 from services.rag_service import (ensure_default_document, index_pdf, retrieve,
                                   has_sufficient_context, is_patient_specific,
                                   NOT_FOUND_MESSAGE, highlight_excerpt)
-from services.llm_service import generate_answer, normalise_answer
+from services.llm_service import generate_answer, normalise_answer, clean_plain_text
 from services.chroma_service import delete_document as delete_chroma_document, evidence_for_page
 
 
@@ -375,13 +375,13 @@ def normalise_message(message_id: str, current_user=Depends(get_current_user)):
     if not message:
         raise HTTPException(404, "Answer not found")
 
-    simplified = message.get("normalised_content")
+    simplified = clean_plain_text(message.get("normalised_content", ""))
     if not simplified:
         try:
             simplified = normalise_answer(message["content"])
         except Exception:
             raise HTTPException(503, "Plain-language conversion is temporarily unavailable. Please try again.")
-        messages_collection.update_one({"_id": message["_id"]}, {"$set": {"normalised_content": simplified}})
+    messages_collection.update_one({"_id": message["_id"]}, {"$set": {"normalised_content": simplified}})
     return {"normalised_answer": simplified}
 
 
