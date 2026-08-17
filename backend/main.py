@@ -231,6 +231,9 @@ def upload_pdf(file: UploadFile = File(...), current_user=Depends(get_current_us
     try:
         document, created = index_pdf(target, current_user["user_id"], display_name=safe_name)
         return {"status": "ready", "indexed": created, "document": document}
+    except ValueError as error:
+        target.unlink(missing_ok=True)
+        raise HTTPException(400, str(error))
     except Exception:
         target.unlink(missing_ok=True)
         raise HTTPException(400, "Unable to index this PDF. Ensure it is a readable, text-based PDF and try again.")

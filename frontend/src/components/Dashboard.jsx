@@ -50,6 +50,29 @@ function PdfSourcePage({ pdfData, page, highlight }) {
   return <div className="pdf-page-wrap"><p>{status}</p><div className="pdf-canvas-wrap"><canvas ref={canvasRef}/>{highlights.map((box, index) => <i className="pdf-highlight" key={index} style={{ left: box.left, top: box.top, width: box.width, height: box.height }}/>)}</div></div>;
 }
 
+const HEALTHCARE_SECTION_HEADERS = [
+  "INDICATIONS AND USAGE",
+  "CONTRAINDICATIONS",
+  "WARNINGS AND PRECAUTIONS",
+  "DOSAGE AND ADMINISTRATION",
+  "ADVERSE REACTIONS",
+  "DRUG INTERACTIONS",
+];
+
+async function validateHealthcareDocument(file) {
+  const arrayBuffer = await file.arrayBuffer();
+  const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+  let text = "";
+  for (let i = 1; i <= pdf.numPages; i += 1) {
+    const page = await pdf.getPage(i);
+    const content = await page.getTextContent();
+    text += content.items.map((item) => item.str).join(" ");
+  }
+  const upper = text.toUpperCase();
+  const matches = HEALTHCARE_SECTION_HEADERS.filter((header) => upper.includes(header));
+  return matches.length >= 2;
+}
+
 function Dashboard() {
   const navigate = useNavigate();
   const [sessions, setSessions] = useState([]);
@@ -133,7 +156,8 @@ function Dashboard() {
   const upload = async (event) => {
     const file = event.target.files?.[0]; event.target.value = ""; if (!file) return;
     if (!file.name.toLowerCase().endsWith(".pdf")) { setNotice("Please choose a PDF file."); return; }
-    try { setUploading("Uploading PDF…"); const form = new FormData(); form.append("file", file); setUploading("Extracting text and creating embeddings…"); const data = await request("/api/upload", { method: "POST", body: form }); await refreshDocuments(); if (activeSession) await selectDocument(data.document.document_id); setNotice(`✓ Ready — ${data.document.file_name}: ${data.document.page_count} pages, ${data.document.chunk_count} chunks`); }
+    try {
+      setUploading("Validating document…"); const isHealthcare = await validateHealthcareDocument(file); if (!isHealthcare) { setNotice("This does not appear to be a healthcare or drug-label document."); return; } setUploading("Uploading PDF…"); const form = new FormData(); form.append("file", file); setUploading("Extracting text and creating embeddings…"); const data = await request("/api/upload", { method: "POST", body: form }); await refreshDocuments(); if (activeSession) await selectDocument(data.document.document_id); setNotice(`✓ Ready — ${data.document.file_name}: ${data.document.page_count} pages, ${data.document.chunk_count} chunks`); }
     catch (error) { setNotice(error.message); } finally { setUploading(""); }
   };
   const removeDocument = async (documentId) => {

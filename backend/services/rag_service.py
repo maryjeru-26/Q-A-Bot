@@ -11,6 +11,22 @@ from .chroma_service import index_chunks, search
 
 NOT_FOUND_MESSAGE = "I couldn't find sufficient information about this in the uploaded document."
 
+HEALTHCARE_SECTION_HEADERS = [
+    "INDICATIONS AND USAGE",
+    "CONTRAINDICATIONS",
+    "WARNINGS AND PRECAUTIONS",
+    "DOSAGE AND ADMINISTRATION",
+    "ADVERSE REACTIONS",
+    "DRUG INTERACTIONS",
+]
+
+
+def validate_healthcare_document(pages):
+    """Return True only when at least two drug-label section headers are present."""
+    text = " ".join(pages).upper()
+    matches = sum(1 for header in HEALTHCARE_SECTION_HEADERS if header in text)
+    return matches >= 2
+
 
 def highlight_excerpt(text, question):
     """Return a small, query-specific label excerpt—not an entire page chunk."""
@@ -76,6 +92,8 @@ def index_pdf(path, user_id, is_default=False, display_name=None):
         existing["document_id"] = str(existing["_id"])
         return existing, False
     pages, page_count = extract_pages(path)
+    if not validate_healthcare_document(pages):
+        raise ValueError("Document does not appear to be a healthcare or drug-label document.")
     chunks = chunk_pages(pages, int(os.getenv("CHUNK_SIZE", "1100")), int(os.getenv("CHUNK_OVERLAP", "180")))
     if not chunks:
         raise ValueError("No readable text was found in this PDF")
