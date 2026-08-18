@@ -420,7 +420,7 @@ def chat(request: ChatRequest, current_user=Depends(get_current_user)):
     # chunk. The answer may use additional context internally, but the displayed
     # page is always metadata from this real retrieval result.
     citations = []
-    if chunks:
+    if chunks and not answer.startswith(NOT_FOUND_MESSAGE):
         meta = chunks[0]["metadata"]
         citations = [{"document": meta["document_name"], "document_id": meta["document_id"],
                       "page": meta["page_start"], "page_end": meta["page_end"],
